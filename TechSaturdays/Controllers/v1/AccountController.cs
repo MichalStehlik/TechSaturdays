@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TechSaturdays.Interfaces;
 using TechSaturdays.Models.InputModels;
+using TechSaturdays.Models.ViewModels;
 
 namespace TechSaturdays.Controllers.v1
 {
@@ -18,6 +21,19 @@ namespace TechSaturdays.Controllers.v1
         {
             _auth = auth;
             _logger = logger;
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUserAsync()
+        {
+            var userId = Guid.Parse(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value);
+            var user = await _auth.GetUserAsync(userId);
+            if (user is not null)
+            {
+                return Ok(user);
+            }
+            return NotFound();
         }
 
         [AllowAnonymous]
@@ -48,6 +64,42 @@ namespace TechSaturdays.Controllers.v1
 
         [AllowAnonymous]
         [HttpPost]
+        [Route("send-password-recovery")]
+        public async Task<IActionResult> SendRecoveryEmailAsync(string email)
+        {
+            if (await _auth.SendRecoveryEmail(email))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("send-email-confirmation")]
+        public async Task<IActionResult> SendConfirmationEmailAsync(string email)
+        {
+            if (await _auth.SendConfirmationEmail(email))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("email-confirmation")]
+        public async Task<IActionResult> ConfirmEmailAsync(string userId, string code)
+        {
+            if (await _auth.ConfirmEmail(userId, code))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
         [Route("register")]
         public async Task<IActionResult> RegisterAsync(RegisterIM values)
         {
@@ -56,7 +108,7 @@ namespace TechSaturdays.Controllers.v1
             {
                 return BadRequest();
             }
-            return Created(nameof(RegisterAsync), user);
+            return Created(nameof(GetUserAsync), user);
         }
     }
 }

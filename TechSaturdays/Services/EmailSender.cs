@@ -1,7 +1,7 @@
-﻿//using Microsoft.Graph;
-//using Azure.Identity;
+﻿using Azure.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
+using Microsoft.Graph;
 
 namespace TechSaturdays.Services
 {
@@ -16,9 +16,39 @@ namespace TechSaturdays.Services
             _logger = logger;
         }
 
-        public Task SendEmailAsync(string email, string subject, string htmlMessage)
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            throw new NotImplementedException();
+            var message = new Message
+            {
+                Subject = subject,
+                Body = new ItemBody
+                {
+                    ContentType = BodyType.Html,
+                    Content = htmlMessage
+                },
+                ToRecipients = new List<Recipient>()
+                {
+                    new Recipient {EmailAddress = new EmailAddress {Address = email } }
+                }
+            };
+            string[] scopes = new string[] { "https://graph.microsoft.com/.default" }; 
+
+            var options = new TokenCredentialOptions
+            {
+                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
+            };
+
+            var authProvider = new ClientSecretCredential(
+                _options.TenantId,
+                _options.ClientId,
+                _options.ClientSecret,
+                options);
+            //var authProvider = new ClientCredentialProvider(confidentialClientApplication);
+            var graphClient = new GraphServiceClient(authProvider);
+            await graphClient.Users[_options.UserId]
+                .SendMail(message, false)
+                .Request()
+                .PostAsync();
         }
     }
 }

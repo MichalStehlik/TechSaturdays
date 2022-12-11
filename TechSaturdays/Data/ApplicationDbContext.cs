@@ -10,7 +10,7 @@ namespace TechSaturdays.Data
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser,IdentityRole<Guid>,Guid>
     {
         private ILogger<ApplicationDbContext> _logger;
-        public DbSet<Models.Action> Actions { get; set; }
+        public DbSet<Models.EventAction> Actions { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Application> Applications { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ILogger<ApplicationDbContext> logger)

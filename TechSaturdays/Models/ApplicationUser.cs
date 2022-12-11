@@ -8,9 +8,9 @@ namespace TechSaturdays.Models
     public class ApplicationUser : IdentityUser<Guid>
     {
         [Required]
-        public string Firstname { get; set; } = String.Empty;
+        public string FirstName { get; set; } = String.Empty;
         [Required]
-        public string Lastname { get; set; } = String.Empty;
+        public string LastName { get; set; } = String.Empty;
         [Required]
         [Column(TypeName = "datetime2")]
         public DateTime BirthDate { get; set; }
@@ -23,10 +23,9 @@ namespace TechSaturdays.Models
         [Column(TypeName = "datetime2")]
         public DateTime Updated { get; set; } = DateTime.Now;
         [Column(TypeName = "datetime2")]
-        public DateTime? BannedUntil { get; set; } = null;
         public ICollection<Application> Applications { get; set; }
         public ICollection<Application> CreatedApplications { get; set; }
         public ICollection<Application> RevokedApplications { get; set; }
-        public ICollection<Group> GroupsLoctored { get; set; }
+        public ICollection<Group> GroupsLectored { get; set; }
     }
 }

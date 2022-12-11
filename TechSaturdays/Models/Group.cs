@@ -5,7 +5,7 @@
         public int GroupId { get; set; }
         public string Name { get; set; } = String.Empty;
         public int ActionId { get; set; }
-        public Action Action { get; set; }
+        public EventAction Action { get; set; }
         public string Description { get; set; } = String.Empty;
         public string Note { get; set; } = String.Empty;
         public int MaximumCapacity { get; set; } = 0;

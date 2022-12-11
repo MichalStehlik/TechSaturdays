@@ -30,7 +30,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddOptions();
+builder.Services.AddSingleton<RazorViewToStringRenderer>();
 builder.Services.AddScoped<IApplicationAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IRepository<Guid,ApplicationUser>, UsersRepository>();
+builder.Services.AddScoped<IRepository<int, EventAction>, ActionsRepository>();
+builder.Services.AddScoped<UsersRepository>();
 builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("JWT"));
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
@@ -108,8 +112,8 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
