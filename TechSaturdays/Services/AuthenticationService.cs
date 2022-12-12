@@ -1,20 +1,19 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
-using Microsoft.Graph;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
+using TechSaturdays.Controllers.v1;
+using TechSaturdays.Emails.ViewModels;
 using TechSaturdays.Interfaces;
 using TechSaturdays.Models;
 using TechSaturdays.Models.InputModels;
 using TechSaturdays.Models.ViewModels;
-using static Microsoft.Graph.Constants;
 
 namespace TechSaturdays.Services
 {
@@ -26,8 +25,18 @@ namespace TechSaturdays.Services
         private readonly JWTOptions _options;
         private readonly IEmailSender _mailer;
         private readonly RazorViewToStringRenderer _renderer;
+        private readonly IHttpContextAccessor _hca;
+        private readonly HttpRequest _request;
 
-        public AuthenticationService(ILogger<AuthenticationService> logger, SignInManager<ApplicationUser> sim, UserManager<ApplicationUser> um, IOptions<JWTOptions> options, IEmailSender mailer, RazorViewToStringRenderer renderer)
+        public AuthenticationService(
+            ILogger<AuthenticationService> logger, 
+            SignInManager<ApplicationUser> sim, 
+            UserManager<ApplicationUser> um, 
+            IOptions<JWTOptions> options, 
+            IEmailSender mailer, 
+            RazorViewToStringRenderer renderer,
+            IHttpContextAccessor hca
+            )
         {
             _logger = logger;
             _sim = sim;
@@ -35,6 +44,8 @@ namespace TechSaturdays.Services
             _options = options.Value;
             _mailer = mailer;
             _renderer = renderer;
+            _hca = hca;
+            _request = hca.HttpContext.Request;
         }
 
         public async Task<AuthenticationResult> AuthenticatePasswordAsync(LoginIM credentials)
@@ -55,7 +66,7 @@ namespace TechSaturdays.Services
             return new AuthenticationResult(result, token);
         }
 
-        public async Task<ApplicationUser?> CreateUserAsync(RegisterIM entry)
+        public async Task<RegistrationResult> CreateUserAsync(RegisterIM entry)
         {
             ApplicationUser user = new ApplicationUser
             {
@@ -72,13 +83,11 @@ namespace TechSaturdays.Services
             var result = await _um.CreateAsync(user, entry.Password);
             if (!result.Succeeded)
             {
-                return null;
+                return new RegistrationResult { Successful = false };
             }
             var code = await _um.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-            await _mailer.SendEmailAsync(entry.Email,"Potvrzení registrace", $"CODE:" + code + " UID:" + user.Id);
-            return user;
+            return new RegistrationResult { Successful = true, User = user, ConfirmationCode = code};
         }
 
         public async Task<UserVM?> GetUserAsync(Guid id)

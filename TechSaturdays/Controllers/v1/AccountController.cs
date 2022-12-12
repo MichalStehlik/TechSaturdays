@@ -1,11 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Graph;
 using System.Security.Claims;
+using System.Text.Encodings.Web;
+using TechSaturdays.Emails.ViewModels;
 using TechSaturdays.Interfaces;
 using TechSaturdays.Models.InputModels;
 using TechSaturdays.Models.ViewModels;
+using TechSaturdays.Services;
 
 namespace TechSaturdays.Controllers.v1
 {
@@ -16,11 +22,20 @@ namespace TechSaturdays.Controllers.v1
     {
         private IApplicationAuthenticationService _auth;
         private ILogger<AccountController> _logger;
+        private readonly IEmailSender _mailer;
+        private readonly RazorViewToStringRenderer _renderer;
 
-        public AccountController(IApplicationAuthenticationService auth, ILogger<AccountController> logger)
+        public AccountController(
+            IApplicationAuthenticationService auth, 
+            ILogger<AccountController> logger,
+            IEmailSender mailer,
+            RazorViewToStringRenderer renderer
+            )
         {
             _auth = auth;
             _logger = logger;
+            _mailer = mailer;
+            _renderer = renderer;
         }
 
         [HttpGet]
@@ -103,12 +118,24 @@ namespace TechSaturdays.Controllers.v1
         [Route("register")]
         public async Task<IActionResult> RegisterAsync(RegisterIM values)
         {
-            var user = await _auth.CreateUserAsync(values);
-            if (user == null)
+            var result = await _auth.CreateUserAsync(values);
+            if (!result.Successful)
             {
                 return BadRequest();
             }
-            return Created(nameof(GetUserAsync), user);
+            string appUrl = HtmlEncoder.Default.Encode(Request.Scheme + "://" + Request.Host.Value);
+
+            string htmlBody = await _renderer.RenderViewToStringAsync("/Emails/Pages/ConfirmAccount.cshtml",
+                new ConfirmEmailVM
+                {
+                    ConfirmationCode = result.ConfirmationCode,
+                    User = result.User,
+                    ConfirmEmailUrl = appUrl + "/account/email-confirmation?code=" + result.ConfirmationCode + "&id=" + result.User.Id,
+                    AppUrl = appUrl
+                });
+
+            await _mailer.SendEmailAsync(result.User.Email, "Potvrzení registrace", htmlBody);
+            return Created(nameof(GetUserAsync), result.User);
         }
     }
 }

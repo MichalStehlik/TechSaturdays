@@ -30,7 +30,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddOptions();
-builder.Services.AddSingleton<RazorViewToStringRenderer>();
+builder.Services.AddScoped<RazorViewToStringRenderer>();
 builder.Services.AddScoped<IApplicationAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IRepository<Guid,ApplicationUser>, UsersRepository>();
 builder.Services.AddScoped<IRepository<int, EventAction>, ActionsRepository>();
@@ -74,6 +74,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(
         options.Password.RequiredLength = Convert.ToInt32(builder.Configuration["Password:Length"]);
     }
     )
+    .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
