@@ -23,29 +23,18 @@ namespace TechSaturdays.Services
         private readonly SignInManager<ApplicationUser> _sim;
         private readonly UserManager<ApplicationUser> _um;
         private readonly JWTOptions _options;
-        private readonly IEmailSender _mailer;
-        private readonly RazorViewToStringRenderer _renderer;
-        private readonly IHttpContextAccessor _hca;
-        private readonly HttpRequest _request;
 
         public AuthenticationService(
             ILogger<AuthenticationService> logger, 
             SignInManager<ApplicationUser> sim, 
             UserManager<ApplicationUser> um, 
-            IOptions<JWTOptions> options, 
-            IEmailSender mailer, 
-            RazorViewToStringRenderer renderer,
-            IHttpContextAccessor hca
+            IOptions<JWTOptions> options
             )
         {
             _logger = logger;
             _sim = sim;
             _um = um;
             _options = options.Value;
-            _mailer = mailer;
-            _renderer = renderer;
-            _hca = hca;
-            _request = hca.HttpContext.Request;
         }
 
         public async Task<AuthenticationResult> AuthenticatePasswordAsync(LoginIM credentials)
@@ -111,38 +100,26 @@ namespace TechSaturdays.Services
             return null;
         }
 
-        public async Task<bool> SendRecoveryEmail(string email)
+        public async Task<RegistrationResult> SendRecoveryEmail(string email)
         {
             var user = await _um.FindByEmailAsync(email);
             if (user == null || !(await _um.IsEmailConfirmedAsync(user)))
             {
-                return false;
+                return new RegistrationResult { Successful = false };
             }
-            var userId = await _um.GetUserIdAsync(user);
             var code = await _um.GeneratePasswordResetTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            await _mailer.SendEmailAsync(
-                    email,
-                    "Password Recovery",
-                    $"CODE:" + code + " UID:" + userId);
-            return true;
+            return new RegistrationResult { Successful = true, User = user, ConfirmationCode = code };
         }
 
-        public async Task<bool> SendConfirmationEmail(string email)
+        public async Task<RegistrationResult> SendConfirmationEmail(string email)
         {
             var user = await _um.FindByEmailAsync(email);
             if (user == null || !(await _um.IsEmailConfirmedAsync(user)))
             {
-                return false;
+                return new RegistrationResult { Successful = false };
             }
-            var userId = await _um.GetUserIdAsync(user);
             var code = await _um.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            await _mailer.SendEmailAsync(
-                    email,
-                    "Email Confirmation",
-                    $"CODE:" + code + " UID:" + userId);
-            return true;
+            return new RegistrationResult { Successful = true, User = user, ConfirmationCode = code };
         }
 
         public async Task<bool> ConfirmEmail(string userId, string code)

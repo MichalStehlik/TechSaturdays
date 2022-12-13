@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Graph;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Encodings.Web;
 using TechSaturdays.Emails.ViewModels;
 using TechSaturdays.Interfaces;
@@ -82,8 +84,20 @@ namespace TechSaturdays.Controllers.v1
         [Route("send-password-recovery")]
         public async Task<IActionResult> SendRecoveryEmailAsync(string email)
         {
-            if (await _auth.SendRecoveryEmail(email))
+            var result = await _auth.SendRecoveryEmail(email);
+            if (result.Successful)
             {
+                string appUrl = HtmlEncoder.Default.Encode(Request.Scheme + "://" + Request.Host.Value);
+                string htmlBody = await _renderer.RenderViewToStringAsync("/Emails/Pages/ConfirmAccount.cshtml",
+                    new ConfirmEmailVM
+                    {
+                        ConfirmationCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(result.ConfirmationCode)),
+                        User = result.User,
+                        ConfirmEmailUrl = appUrl + "/account/password-recovery?code=" + result.ConfirmationCode + "&id=" + result.User.Id,
+                        AppUrl = appUrl
+                    });
+
+                await _mailer.SendEmailAsync(result.User.Email, "Potvrzení registrace", htmlBody);
                 return Ok();
             }
             return BadRequest();
@@ -94,8 +108,20 @@ namespace TechSaturdays.Controllers.v1
         [Route("send-email-confirmation")]
         public async Task<IActionResult> SendConfirmationEmailAsync(string email)
         {
-            if (await _auth.SendConfirmationEmail(email))
+            var result = await _auth.SendConfirmationEmail(email);
+            if (result.Successful)
             {
+                string appUrl = HtmlEncoder.Default.Encode(Request.Scheme + "://" + Request.Host.Value);
+                string htmlBody = await _renderer.RenderViewToStringAsync("/Emails/Pages/ConfirmAccount.cshtml",
+                    new ConfirmEmailVM
+                    {
+                        ConfirmationCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(result.ConfirmationCode)),
+                        User = result.User,
+                        ConfirmEmailUrl = appUrl + "/account/password-recovery?code=" + result.ConfirmationCode + "&id=" + result.User.Id,
+                        AppUrl = appUrl
+                    });
+
+                await _mailer.SendEmailAsync(result.User.Email, "Potvrzení registrace", htmlBody);
                 return Ok();
             }
             return BadRequest();
@@ -104,9 +130,9 @@ namespace TechSaturdays.Controllers.v1
         [AllowAnonymous]
         [HttpPost]
         [Route("email-confirmation")]
-        public async Task<IActionResult> ConfirmEmailAsync(string userId, string code)
+        public async Task<IActionResult> ConfirmEmailAsync(string id, string code)
         {
-            if (await _auth.ConfirmEmail(userId, code))
+            if (await _auth.ConfirmEmail(id, code))
             {
                 return Ok();
             }
@@ -128,7 +154,7 @@ namespace TechSaturdays.Controllers.v1
             string htmlBody = await _renderer.RenderViewToStringAsync("/Emails/Pages/ConfirmAccount.cshtml",
                 new ConfirmEmailVM
                 {
-                    ConfirmationCode = result.ConfirmationCode,
+                    ConfirmationCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(result.ConfirmationCode)),
                     User = result.User,
                     ConfirmEmailUrl = appUrl + "/account/email-confirmation?code=" + result.ConfirmationCode + "&id=" + result.User.Id,
                     AppUrl = appUrl

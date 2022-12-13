@@ -11,8 +11,8 @@ namespace TechSaturdays.Interfaces
         public Task<UserVM?> GetUserAsync(Guid id);
         public Task<AuthenticationResult> AuthenticatePasswordAsync(LoginIM credentials);
         public Task<RegistrationResult> CreateUserAsync(RegisterIM entry);
-        public Task<bool> SendRecoveryEmail(string email);
-        public Task<bool> SendConfirmationEmail(string email);
-        public Task<bool> ConfirmEmail(string userId, string code);
+        public Task<RegistrationResult> SendRecoveryEmail(string email);
+        public Task<RegistrationResult> SendConfirmationEmail(string email);
+        public Task<bool> ConfirmEmail(string id, string code);
     }
 }
