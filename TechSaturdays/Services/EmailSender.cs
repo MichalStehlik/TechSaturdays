@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.Graph;
+using TechSaturdays.Interfaces;
 
 namespace TechSaturdays.Services
 {
-    public class EmailSender : IEmailSender
+    public class EmailSender : IEmailSender, IHtmlEmailSender
     {
         private readonly EmailOptions _options;
         private readonly ILogger<EmailSender> _logger;
@@ -32,6 +33,41 @@ namespace TechSaturdays.Services
                 }
             };
             string[] scopes = new string[] { "https://graph.microsoft.com/.default" }; 
+
+            var options = new TokenCredentialOptions
+            {
+                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
+            };
+
+            var authProvider = new ClientSecretCredential(
+                _options.TenantId,
+                _options.ClientId,
+                _options.ClientSecret,
+                options);
+            //var authProvider = new ClientCredentialProvider(confidentialClientApplication);
+            var graphClient = new GraphServiceClient(authProvider);
+            await graphClient.Users[_options.UserId]
+                .SendMail(message, false)
+                .Request()
+                .PostAsync();
+        }
+
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage, string plainMessage)
+        {
+            var message = new Message
+            {
+                Subject = subject,
+                Body = new ItemBody
+                {
+                    ContentType = BodyType.Html,
+                    Content = htmlMessage
+                },
+                ToRecipients = new List<Recipient>()
+                {
+                    new Recipient {EmailAddress = new EmailAddress {Address = email } }
+                }
+            };
+            string[] scopes = new string[] { "https://graph.microsoft.com/.default" };
 
             var options = new TokenCredentialOptions
             {

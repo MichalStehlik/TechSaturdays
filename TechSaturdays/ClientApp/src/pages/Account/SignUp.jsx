@@ -12,9 +12,9 @@ export const SignUp = () => {
             email: data.email,
             birthdate: data.birthdate,
             school: data.school,
-            grade: data.grade,
-            aspirant: data.aspirant,
-            inmailinglist: data.inmailinglist,
+            grade: Number(data.grade),
+            aspirant: Boolean(data.aspirant),
+            inmailinglist: Boolean(data.inmailinglist),
             password: data.password
         }
         )

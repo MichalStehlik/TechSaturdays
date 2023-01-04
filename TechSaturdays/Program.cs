@@ -37,6 +37,7 @@ builder.Services.AddScoped<IRepository<int, EventAction>, ActionsRepository>();
 builder.Services.AddScoped<UsersRepository>();
 builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("JWT"));
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+//builder.Services.AddScoped<IHtmlEmailSender, EmailSender>();
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
 
 builder.Services.AddEndpointsApiExplorer();
