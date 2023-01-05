@@ -1,10 +1,10 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="cs">
 <head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email</title>
     <style type="text/css">
         /* CLIENT-SPECIFIC STYLES */
         body, table, td, a {
@@ -34,6 +34,45 @@
             margin: 0 !important;
             padding: 0 !important;
             width: 100% !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h1 {
+            padding: 0;
+            margin: 0;
+        }
+
+        h2 {
+            color: #3C7EC1;
+            font-size: 28px;
+            line-height: 32px;
+            padding: 22px 0px;
+            margin: 0;
+            text-align: center;
+            text-transform: uppercase;
+            text-shadow: 0 1px white;
+        }
+
+        pre {
+            color: red;
+            word-wrap: break-word;
+            overflow: auto;
+            border: 1px solid gray;
+            padding: 5px;
+        }
+
+        .btn {
+            border-radius: 4px;
+            margin: 0;
+            text-align: center;
+            display: block;
+            padding: 12px;
+            background: #0072bc;
+            color: white;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-family: 'open_sansbold';
+            font-size: 12px;
         }
         /* iOS BLUE LINKS */
         a[x-apple-data-detectors] {
@@ -46,9 +85,9 @@
         }
         /* MOBILE STYLES */
         @@media screen and (max-width:600px) {
-            h1 {
-                font-size: 32px !important;
-                line-height: 32px !important;
+            h2 {
+                font-size: 24px !important;
+                line-height: 24px !important;
             }
         }
         /* ANDROID CENTER FIX */
@@ -57,113 +96,40 @@
         }
     </style>
 </head>
-<body style="background-color: #ffffff; margin: 0 !important; padding: 0 !important;">
-
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-        <tr>
-            <td bgcolor="#eaeaea" align="center">
-                <!--[if (gte mso 9)|(IE)]>
-                <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
-                <tr>
-                <td align="center" valign="top" width="600">
-                <![endif]-->
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td align="center" valign="top" style="padding: 40px 10px 40px 10px;">
-                            @if (!String.IsNullOrEmpty(Model.AppUrl))
-                            {
-                                <a href="@Model.AppUrl" target="_blank">
-                                    Soboty s technikou
-                                </a>
-                            }
-                        </td>
-                    </tr>
-                </table>
-                <!--[if (gte mso 9)|(IE)]>
+<body style="background-color: #ffffff; color: black; margin: 0 !important; padding: 0 !important;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 800px; margin: auto;">
+        <thead style="background-color: #E9E9E9; margin: 0 !important; padding: 0 !important;">
+            <tr style="margin: 0 !important; padding: 0 !important; border-bottom: thick #357BC2 solid !important;">
+                <td align="center" valign="top" style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important; border-bottom: thick #357BC2 solid !important;">
+                    <h1><a href="@Model.AppUrl" target="_blank" style="color: black; font-size:18pt; text-decoration: none; font-weight: 200; text-align: center; margin: 0; padding: 0;">Soboty s technikou</a></h1>
                 </td>
-                </tr>
-                </table>
-                <![endif]-->
-            </td>
-        </tr>
-        <!-- HERO -->
-        <tr>
-            <td bgcolor="#00f00f" align="center" style="padding: 0px 10px 0px 10px;">
-                <!--[if (gte mso 9)|(IE)]>
-                <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
-                <tr>
-                <td align="center" valign="top" width="600">
-                <![endif]-->
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <h1 style="font-size: 48px; font-weight: 100; margin: 0;">@ViewData["Title"]</h1>
-                        </td>
-                    </tr>
-                </table>
-                <!--[if (gte mso 9)|(IE)]>
+            </tr>
+            <tr style="margin: 0 !important; padding: 0 !important;">
+                <td align="center" valign="top" style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important;">
+                    <h2>@ViewData["Title"]</h2>
                 </td>
-                </tr>
-                </table>
-                <![endif]-->
-            </td>
-        </tr>
-        <!-- COPY BLOCK -->
-        <tr>
-            <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
-                <!--[if (gte mso 9)|(IE)]>
-                <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
-                <tr>
-                <td align="center" valign="top" width="600">
-                <![endif]-->
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <!-- COPY -->
-                    <tr>
-                        <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: Calibri, Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            @RenderBody()
-                        </td>
-                    </tr>
-                </table>
-                <!--[if (gte mso 9)|(IE)]>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td align="left" valign="top" style="background-color: #ffffff; margin: 0 !important; padding: 10px !important;">
+                    @RenderBody()
                 </td>
-                </tr>
-                </table>
-                <![endif]-->
-            </td>
-        </tr>
-        <!-- FOOTER -->
-        <tr>
-            <td bgcolor="#e9e9e9" align="center" style="padding: 0px 10px 0px 10px;">
-                <!--[if (gte mso 9)|(IE)]>
-                <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
-                <tr>
-                <td align="center" valign="top" width="600">
-                <![endif]-->
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <!-- NAVIGATION -->
-                    <tr>
-                        <td bgcolor="#f4f4f4" align="left" style="padding: 30px 30px 30px 30px; color: #666666; font-family: Calibri, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 18px;">
-                            <p style="margin: 0;">
-                                <a href="https://www.pslib.cz" target="_blank" style="color: #111111; font-weight: 700;">pslib.cz</a>
-                                <a href="https://sobota.pslib.cloud" target="_blank" style="color: #111111; font-weight: 400;">Sobota s technikou</a>
-                            </p>
-                        </td>
-                    </tr>
-                    <!-- ADDRESS -->
-                    <tr>
-                        <td bgcolor="#f4f4f4" align="left" style="padding: 0px 30px 30px 30px; color: #666666; font-family: Calibri, Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 18px;">
-                            <p style="margin: 0;">Střední průmyslová škola strojní a elektrotechnická a Vyšší odborná škola, Liberec 1, Masarykova 3, příspěvková organizace</p>
-                        </td>
-                    </tr>
-                </table>
-                <!--[if (gte mso 9)|(IE)]>
+            </tr>
+        </tbody>
+        <tfoot align="left" style="background-color: #E9E9E9; margin: 0 !important; padding: 0 !important; border-top: 1px black solid;">
+            <tr>
+                <td style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important; border-top: 1px black solid !important;">
+                    <a href="https://www.pslib.cz" target="_blank" style="color: #111111; font-weight: 400; margin-right: 10px !important;">pslib.cz</a>
+                    <a href="@Model.AppUrl" target="_blank" style="color: #111111; font-weight: 400; margin-right: 10px !important;">Sobota s technikou</a>
                 </td>
-                </tr>
-                </table>
-                <![endif]-->
-            </td>
-        </tr>
+            </tr>
+            <tr>
+                <td style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important;">
+                    Střední průmyslová škola strojní a elektrotechnická a Vyšší odborná škola
+                </td>
+            </tr>
+        </tfoot>
     </table>
-
 </body>
 </html>
