@@ -52,15 +52,6 @@
             text-transform: uppercase;
             text-shadow: 0 1px white;
         }
-
-        pre {
-            color: red;
-            word-wrap: break-word;
-            overflow: auto;
-            border: 1px solid gray;
-            padding: 5px;
-        }
-
         .btn {
             border-radius: 4px;
             margin: 0;
@@ -96,40 +87,34 @@
         }
     </style>
 </head>
-<body style="background-color: #ffffff; color: black; margin: 0 !important; padding: 0 !important;">
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 800px; margin: auto;">
-        <thead style="background-color: #E9E9E9; margin: 0 !important; padding: 0 !important;">
-            <tr style="margin: 0 !important; padding: 0 !important; border-bottom: thick #357BC2 solid !important;">
-                <td align="center" valign="top" style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important; border-bottom: thick #357BC2 solid !important;">
-                    <h1><a href="@Model.AppUrl" target="_blank" style="color: black; font-size:18pt; text-decoration: none; font-weight: 200; text-align: center; margin: 0; padding: 0;">Soboty s technikou</a></h1>
-                </td>
-            </tr>
-            <tr style="margin: 0 !important; padding: 0 !important;">
-                <td align="center" valign="top" style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important;">
-                    <h2>@ViewData["Title"]</h2>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td align="left" valign="top" style="background-color: #ffffff; margin: 0 !important; padding: 10px !important;">
-                    @RenderBody()
-                </td>
-            </tr>
-        </tbody>
-        <tfoot align="left" style="background-color: #E9E9E9; margin: 0 !important; padding: 0 !important; border-top: 1px black solid;">
-            <tr>
-                <td style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important; border-top: 1px black solid !important;">
-                    <a href="https://www.pslib.cz" target="_blank" style="color: #111111; font-weight: 400; margin-right: 10px !important;">pslib.cz</a>
-                    <a href="@Model.AppUrl" target="_blank" style="color: #111111; font-weight: 400; margin-right: 10px !important;">Sobota s technikou</a>
-                </td>
-            </tr>
-            <tr>
-                <td style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important;">
-                    Střední průmyslová škola strojní a elektrotechnická a Vyšší odborná škola
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+<body style="margin: 0 !important; padding: 0 !important; text-align: center;">
+    <table width="520px" style="background-color: white; margin: 20px auto !important; padding: 0 !important; border: 1px solid #111111; border-radius: 10px">
+        <tr>
+            <td align="center" valign="top" style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important; border-bottom: thick #357BC2 solid !important;">
+                <h1><a href="@Model.AppUrl" target="_blank" style="color: black; font-size:18pt; text-decoration: none; font-weight: 200; text-align: center; margin: 0; padding: 0;">Soboty s technikou</a></h1>
+            </td>
+        </tr>
+        <tr style="margin: 0 !important; padding: 0 !important;">
+            <td align="center" valign="top" style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important; border-bottom: 1px #555555 solid !important;">
+                <h2>@ViewData["Title"]</h2>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" style="background-color: #ffffff; color: #111111; margin: 0 !important; padding: 10px !important;">
+                @RenderBody()
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important; border-top: 1px #555555 solid !important;">
+                <a href="https://www.pslib.cz" target="_blank" style="color: #111111; font-weight: 400; margin-right: 10px !important;">pslib.cz</a>
+                <a href="@Model.AppUrl" target="_blank" style="color: #111111; font-weight: 400; margin-right: 10px !important;">Sobota s technikou</a>
+            </td>
+        </tr>
+        <tr>
+            <td style="background-color: #E9E9E9; margin: 0 !important; padding: 10px !important;">
+                Střední průmyslová škola strojní a elektrotechnická a Vyšší odborná škola
+            </td>
+        </tr>
+    </table>                  
 </body>
 </html>
