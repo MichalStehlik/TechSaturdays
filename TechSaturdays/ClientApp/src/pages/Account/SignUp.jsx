@@ -57,11 +57,11 @@ export const SignUp = () => {
             </div>
             <div>
                 <label>Aspirant</label>
-                <input defaultValue="" {...register("aspirant")} />
+                <input type='checkbox' {...register('aspirant')} />
             </div>
             <div>
                 <label>Mailing List</label>
-                <input defaultValue="" {...register("inmailinglist")} />
+                <input type='checkbox' {...register('inmailinglist')} />
             </div>
             <div>
                 <label>Password</label>

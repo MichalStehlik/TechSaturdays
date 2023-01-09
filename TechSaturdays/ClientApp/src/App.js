@@ -6,6 +6,8 @@ import { AccountLayout } from "./pages/Account"
 import Profile from "./pages/Account/Profile"
 import SignIn from "./pages/Account/SignIn"
 import SignUp from "./pages/Account/SignUp"
+import EmailConfirmation from "./pages/Account/EmailConfirmation"
+import PasswordRecovery from "./pages/Account/PasswordRecovery"
 import NotFound from "./pages/Special/NotFound"
 import './custom.css';
 
@@ -22,6 +24,8 @@ export default class App extends Component {
             <Route index element={<Profile />} />
             <Route path="sign-in" element={<SignIn />} />
             <Route path="sign-up" element={<SignUp />} />
+            <Route path="email-confirmation" element={<EmailConfirmation />} />
+            <Route path="password-recovery" element={<PasswordRecovery />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

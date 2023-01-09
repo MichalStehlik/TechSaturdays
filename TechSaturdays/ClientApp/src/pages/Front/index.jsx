@@ -11,6 +11,7 @@ export const FrontLayout = () => {
                 <li><Link to="/users">Users</Link></li>
                 {!accessToken ? <li><Link to="/account/sign-in">Sign In</Link></li> : null}
                 {!accessToken ? <li><Link to="/account/sign-up">Sign Up</Link></li> : null }
+                {!accessToken ? <li><Link to="/account/password-recovery">Forgotten password?</Link></li> : null }
             </menu>
         </header>
         <main>
